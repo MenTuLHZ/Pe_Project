@@ -150,9 +150,10 @@ void _Pe_Load::Init_Size(BYTE* _pe_buffer)
 void _Pe_Load::Load_Pe(BYTE* _pe_buffer)
 {
 	IMAGE_NT_HEADERS* _nt_headers = Get_IMAGE_NT_HEADERS(_pe_buffer);
+	IMAGE_FILE_HEADER* _file_header = Get_IMAGE_FILE_HEADER(_nt_headers);
 	IMAGE_OPTIONAL_HEADER* _optional_header = Get_IMAGE_OPTIONAL_HEADER(_nt_headers);
 
-	//复制dos头+NT头+节表总和 fileAligment对其
+	//复制dos头+NT头+节表总和 fileAligment对齐
 	int i = 0;
 	for (; i < _optional_header->SizeOfHeaders; i++)
 	{
@@ -160,6 +161,39 @@ void _Pe_Load::Load_Pe(BYTE* _pe_buffer)
 	}
 	i = 0;
 	//end
-	//拉伸节数据
-}
 
+	//int end_virtual = 0;
+	//int end_file = 0;
+
+	//拉伸节数据
+	for (; i < _file_header->NumberOfSections; i++)
+	{
+		IMAGE_SECTION_HEADER* section_header = (IMAGE_SECTION_HEADER*)&((BYTE*)_optional_header)[((DWORD)_file_header->SizeOfOptionalHeader)+ i * sizeof(IMAGE_SECTION_HEADER)];
+		int section_RVA_baseAddress = section_header->VirtualAddress;
+		int section_FOA_baseAddress = section_header->PointerToRawData;
+		size_t k = 0;
+		for (; k < section_header->SizeOfRawData; k++)
+		{
+			this->peLoad_buffer[section_RVA_baseAddress + k] = _pe_buffer[section_FOA_baseAddress + k];
+			
+		}
+		//end_virtual = section_RVA_baseAddress + k;
+		//end_file = section_FOA_baseAddress + k;
+	}
+	//end
+
+	/*
+	i = 0;
+	//check end file
+	if (end_virtual != this->buffer_size)
+	{
+		int length = this->buffer_size - end_virtual;
+		for (; i < length; i++)
+		{
+			this->peLoad_buffer[end_virtual + i] = _pe_buffer[end_file + i];
+		}
+	}
+	//end
+	*/
+	return;
+}

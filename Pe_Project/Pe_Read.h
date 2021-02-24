@@ -31,30 +31,32 @@ DWORD Get_SizeOfHeaders(IMAGE_OPTIONAL_HEADER* _OPTIONAL_HEADER);
 IMAGE_DATA_DIRECTORY* Get_IMAGE_DATA_DIRECTORY(IMAGE_OPTIONAL_HEADER* _OPTIONAL_HEADER);
 
 //------------------------------------------------------------------
-//IMAGE_SECTION_HEADER arg:pe_buffer （节表）
+//IMAGE_SECTION_HEADER arg:pe_buffer （节表）返回值:IMAGE_SECTION_HEADER
 IMAGE_SECTION_HEADER* Get_IMAGE_SECTION_HEADER(BYTE* _pe_buffer);
 
 //------------------------------------------------------------------
-//IMAGE_EXPORT_DIRECTORY arg:IMAGE_OPTIONAL_HEADER （导出表）
+//IMAGE_EXPORT_DIRECTORY arg:IMAGE_OPTIONAL_HEADER （导出表）返回值:IMAGE_EXPORT_DIRECTORY
 IMAGE_EXPORT_DIRECTORY* Get_IMAGE_EXPORT_DIRECTORY(IMAGE_OPTIONAL_HEADER* _OPTIONAL_HEADER);
 
 //------------------------------------------------------------------
-//IMAGE_IMPORT_DESCRIPTOR arg:IMAGE_OPTIONAL_HEADER （导入表）
+//IMAGE_IMPORT_DESCRIPTOR arg:IMAGE_OPTIONAL_HEADER （导入表）返回值:IMAGE_IMPORT_DESCRIPTOR
 IMAGE_IMPORT_DESCRIPTOR* Get_IMAGE_IMPORT_DESCRIPTOR(IMAGE_OPTIONAL_HEADER* _OPTIONAL_HEADER);
 
 //------------------------------------------------------------------
-//IMAGE_BASE_RELOCATION arg:IMAGE_OPTIONAL_HEADER （重定位表）
+//IMAGE_BASE_RELOCATION arg:IMAGE_OPTIONAL_HEADER （重定位表）返回值:IMAGE_BASE_RELOCATION
 IMAGE_BASE_RELOCATION* Get_IMAGE_BASE_RELOCATION(IMAGE_OPTIONAL_HEADER* _OPTIONAL_HEADER);
 
 //------------------------------------------------------------------
-//IMAGE_BASE_RELOCATION arg:IMAGE_OPTIONAL_HEADER （重定位表）
+//IMAGE_BASE_RELOCATION arg:IMAGE_OPTIONAL_HEADER （重定位表）返回值:IMAGE_RESOURCE_DIRECTORY
 IMAGE_RESOURCE_DIRECTORY* Get_IMAGE_RESOURCE_DIRECTORY(IMAGE_OPTIONAL_HEADER* _OPTIONAL_HEADER);
-
 
 //pe加载
 typedef struct _Pe_Load
 {
+	//初始化大小 arg1:读取文件的指针 返回值:无
 	void Init_Size(BYTE* _pe_buffer);
+
+	//展开pe文件 arg1:读取文件的指针 返回值:无
 	void Load_Pe(BYTE* _pe_buffer);
 
 	DWORD buffer_size;

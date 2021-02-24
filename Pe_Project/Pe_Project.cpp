@@ -4,10 +4,11 @@
 #include <iostream>
 #include <windows.h>
 #include "Pe_Read.h"
-#include "Test.cpp"
+
+
 int main()
 {
-	HANDLE h1 = CreateFileA("C:\\Users\\Administrator\\Desktop\\ipmsg.exe",
+	HANDLE h1 = CreateFileA("C:\\Users\\Administrator\\Desktop\\sysdiag-all-5.0.57.0-20210220.exe",
 		GENERIC_READ | GENERIC_WRITE,
 		0,
 		NULL,
