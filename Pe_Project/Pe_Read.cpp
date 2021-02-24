@@ -1,5 +1,5 @@
-#include<iostream>
-#include <windows.h>
+//Pe_Read.cpp
+#include "Pe_read.h"
 
 //------------------------------------------------------------------
 //IMAGE_FILE_HEADER arg:pe_buffer peNT头
@@ -140,54 +140,26 @@ IMAGE_RESOURCE_DIRECTORY* Get_IMAGE_RESOURCE_DIRECTORY(IMAGE_OPTIONAL_HEADER* _O
 	return (IMAGE_RESOURCE_DIRECTORY*)&_OPTIONAL_HEADER[IMAGE_DIRECTORY_ENTRY_RESOURCE];
 }
 
-typedef struct _Pe_Load
+
+void _Pe_Load::Init_Size(BYTE* _pe_buffer)
 {
-	void Init_Size(BYTE* _pe_buffer)
-	{
-		this->buffer_size = Get_IMAGE_OPTIONAL_HEADER(Get_IMAGE_NT_HEADERS(_pe_buffer))->SizeOfImage;
-		this->peLoad_buffer = (BYTE*)malloc(this->buffer_size);
-	}
-
-	void Load_Pe(BYTE* _pe_buffer)
-	{
-		IMAGE_NT_HEADERS* _nt_headers = Get_IMAGE_NT_HEADERS(_pe_buffer);
-		IMAGE_OPTIONAL_HEADER* _optional_header = Get_IMAGE_OPTIONAL_HEADER(_nt_headers);
-
-		//复制dos头+NT头+节表总和 fileAligment对其
-		int i = 0;
-		for (; i < _optional_header->SizeOfHeaders; i++)
-		{
-			this->peLoad_buffer[i] = _pe_buffer[i];
-		}
-		i = 0;
-		//end
-		//拉伸节数据
-	}
-	DWORD buffer_size;
-	BYTE* peLoad_buffer;
-
-}Pe_Load;
-
-
-int main()
-{
-	HANDLE h1 = CreateFileA("C:\\Users\\Administrator\\Desktop\\ipmsg.exe",
-		GENERIC_READ | GENERIC_WRITE,
-		0,
-		NULL,
-		OPEN_ALWAYS,
-		FILE_ATTRIBUTE_NORMAL,
-		NULL);
-	DWORD e = GetFileSize(h1, NULL);
-	BYTE* c = (BYTE*)malloc(e);
-	DWORD out_r_f_n = 0;
-	if (ReadFile(h1, c, e, &out_r_f_n, NULL))
-	{
-
-	}
-	CloseHandle(h1);
-	Pe_Load _peLoad;
-	_peLoad.Init_Size(c);
-	_peLoad.Load_Pe(c);
-	return 0;
+	this->buffer_size = Get_IMAGE_OPTIONAL_HEADER(Get_IMAGE_NT_HEADERS(_pe_buffer))->SizeOfImage;
+	this->peLoad_buffer = (BYTE*)malloc(this->buffer_size);
 }
+
+void _Pe_Load::Load_Pe(BYTE* _pe_buffer)
+{
+	IMAGE_NT_HEADERS* _nt_headers = Get_IMAGE_NT_HEADERS(_pe_buffer);
+	IMAGE_OPTIONAL_HEADER* _optional_header = Get_IMAGE_OPTIONAL_HEADER(_nt_headers);
+
+	//复制dos头+NT头+节表总和 fileAligment对其
+	int i = 0;
+	for (; i < _optional_header->SizeOfHeaders; i++)
+	{
+		this->peLoad_buffer[i] = _pe_buffer[i];
+	}
+	i = 0;
+	//end
+	//拉伸节数据
+}
+
